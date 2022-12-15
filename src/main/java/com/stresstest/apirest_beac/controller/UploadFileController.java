@@ -12,7 +12,7 @@ import com.stresstest.apirest_beac.service.UploadFileService;
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = {"*","http://localhost:4200"}, allowedHeaders = "*")
 public class UploadFileController {
     private final UploadFileService uploadFileService;
 
