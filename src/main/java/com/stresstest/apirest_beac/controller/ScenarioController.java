@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stresstest.apirest_beac.dto.ScenarioDTO;
 import com.stresstest.apirest_beac.exception.RessourceNotFoundException;
 import com.stresstest.apirest_beac.modele.Scenario;
 import com.stresstest.apirest_beac.modele.TypeScenario;
@@ -39,9 +38,8 @@ public class ScenarioController {
 	}
 	//create scenario
 	@PostMapping("/create")
-	public Scenario createScenario( @RequestBody ScenarioDTO scenario) {
-		//return scenarioRepository.save(scenario);
-		return new Scenario();
+	public Scenario createScenario( @RequestBody Scenario scenario) {
+		return scenarioRepository.save(scenario);
 	}
 	
 	//get scenario by id
