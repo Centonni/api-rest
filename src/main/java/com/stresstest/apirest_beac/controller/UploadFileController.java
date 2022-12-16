@@ -14,7 +14,7 @@ import com.stresstest.apirest_beac.service.UploadFileService;
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"*","http://localhost:4200"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"*","https://jolly-island-00c76d610.2.azurestaticapps.net","http://localhost:4200"}, allowedHeaders = "*")
 public class UploadFileController {
 	@Autowired
     private UploadFileService uploadFileService;
