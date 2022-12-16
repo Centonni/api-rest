@@ -1,5 +1,6 @@
 package com.stresstest.apirest_beac.controller;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ScenarioController {
 	}
 	//create scenario
 	@PostMapping("/create")
-	public Scenario createScenario( @RequestBody ScenarioDTO dto) {
+	public ScenarioDTO createScenario( @RequestBody ScenarioDTO dto) throws ParseException {
 		Scenario scenario = new Scenario();
 		scenario.setAnneeReference("2022");
 		scenario.setContenu(dto.getCommentaire());
@@ -59,7 +60,8 @@ public class ScenarioController {
 		scenario.setStatut("Created");
 		scenario.setType(TypeScenario.valueOf(dto.getTypeScenario().toUpperCase()));
 		
-		return scenarioRepository.save(scenario);
+		scenarioRepository.save(scenario);
+		return ScenarioDTO.scenarioToDTO(scenario);
 	}
 	
 	//get scenario by id
@@ -73,8 +75,8 @@ public class ScenarioController {
 	
 	// update scenario
 	@PutMapping("updateScenario/{id}")
-	public ResponseEntity<Scenario> updateScenario(@PathVariable(value = "id") long scenarioId,
-			@RequestBody Scenario  scenarioDetails) throws RessourceNotFoundException{
+	public ResponseEntity<ScenarioDTO> updateScenario(@PathVariable(value = "id") long scenarioId,
+			@RequestBody Scenario  scenarioDetails) throws RessourceNotFoundException, ParseException{
 		Scenario scenario = scenarioRepository.findById(scenarioId)
 				.orElseThrow(()-> new RessourceNotFoundException("Scenario not found for this id ::" + scenarioId));
 		scenario.setAnneeReference(scenarioDetails.getAnneeReference());
@@ -83,7 +85,7 @@ public class ScenarioController {
 		scenario.setLibelle(scenarioDetails.getLibelle());
 		scenario.setStatut(scenarioDetails.getStatut());
 		
-		return ResponseEntity.ok().body(scenario);
+		return ResponseEntity.ok().body(ScenarioDTO.scenarioToDTO(scenario));
 	} 
 	
 	// launch scenario

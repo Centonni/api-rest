@@ -1,5 +1,12 @@
 package com.stresstest.apirest_beac.dto;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.stresstest.apirest_beac.modele.Scenario;
+
 
 public class ScenarioDTO {
     
@@ -8,6 +15,7 @@ public class ScenarioDTO {
     private String anneeReference;
     private String commentaire;
     private String typeScenario;
+    private String dateCreation;
     private ParametreDTO[] parametres;
     
     
@@ -22,6 +30,33 @@ public class ScenarioDTO {
         this.typeScenario = typeScenario;
     }
 
+    public static Scenario dtoToScenario (ScenarioDTO dto) throws ParseException{
+        Scenario scenario = new Scenario();
+        scenario.setAnneeReference(dto.anneeReference);
+        scenario.setContenu(dto.commentaire);
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+        Date convertedDate = dateFormat.parse(dto.dateCreation);
+        scenario.setDateCreation( convertedDate);
+        scenario.setLibelle(dto.libelle);
+        scenario.setStatut(dto.statut);
+
+        return scenario;
+    }
+
+    public static ScenarioDTO scenarioToDTO (Scenario scenario) throws ParseException{
+        ScenarioDTO dto = new ScenarioDTO();
+        dto.setAnneeReference(scenario.getAnneeReference());
+        dto.setCommentaire(scenario.getContenu());
+
+        dto.setDateCreation( scenario.getDateCreation().toString());
+        dto.setLibelle(scenario.getLibelle());
+        dto.setStatut(scenario.getStatut());
+
+        return dto;
+    }
+
+    
     public String getLibelle() {
         return libelle;
     }
@@ -68,6 +103,14 @@ public class ScenarioDTO {
 
     public void setParametres(ParametreDTO[] parametres) {
         this.parametres = parametres;
+    }
+
+    public String getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(String dateCreation) {
+        this.dateCreation = dateCreation;
     }
 
     
