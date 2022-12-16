@@ -10,6 +10,7 @@ import com.stresstest.apirest_beac.modele.Scenario;
 
 public class ScenarioDTO {
     
+    private Long id;
     private String libelle;
     private String statut;
     private String anneeReference;
@@ -28,6 +29,7 @@ public class ScenarioDTO {
         this.anneeReference = anneeReference;
         this.commentaire = commentaire;
         this.typeScenario = typeScenario;
+        
     }
 
     public static Scenario dtoToScenario (ScenarioDTO dto) throws ParseException{
@@ -40,7 +42,7 @@ public class ScenarioDTO {
         scenario.setDateCreation( convertedDate);
         scenario.setLibelle(dto.libelle);
         scenario.setStatut(dto.statut);
-
+        scenario.setId(dto.getId());
         return scenario;
     }
 
@@ -52,7 +54,7 @@ public class ScenarioDTO {
         dto.setDateCreation( scenario.getDateCreation().toString());
         dto.setLibelle(scenario.getLibelle());
         dto.setStatut(scenario.getStatut());
-
+        dto.setId(scenario.getId());
         return dto;
     }
 
@@ -111,6 +113,14 @@ public class ScenarioDTO {
 
     public void setDateCreation(String dateCreation) {
         this.dateCreation = dateCreation;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     
