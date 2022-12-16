@@ -5,7 +5,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +20,27 @@ import com.stresstest.apirest_beac.exception.RessourceNotFoundException;
 import com.stresstest.apirest_beac.modele.Scenario;
 import com.stresstest.apirest_beac.modele.TypeScenario;
 import com.stresstest.apirest_beac.repository.ScenarioRepository;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/scenario")
-@CrossOrigin
+@CrossOrigin(origins = {"*","http://localhost:4200"}, allowedHeaders = "*")
+@Slf4j
 public class ScenarioController {
 	
-	@Autowired
-	private ScenarioRepository scenarioRepository;
-	
+	private final ScenarioRepository scenarioRepository;
+	private final String pythonServiceEndpoint;
+
+	private final RestTemplate restTemplate;
+
+	public ScenarioController(ScenarioRepository scenarioRepository,
+							  @Value("${beac.scenario.python.ms.endpoint}") String pythonServiceEndpoint,
+							  RestTemplateBuilder templateBuilder) {
+		this.scenarioRepository = scenarioRepository;
+		this.pythonServiceEndpoint = pythonServiceEndpoint;
+		this.restTemplate=templateBuilder.build();
+	}
+
 	// get all scenarios api
 	@GetMapping("/scenarios")
 	public List<Scenario> getAllScenarios(){
@@ -73,17 +91,31 @@ public class ScenarioController {
 	
 	// launch scenario
 		@PutMapping("launchScenario/{id}")
-		public String launchScenario(@PathVariable(value = "id") long scenarioId,
-				@RequestBody Scenario  scenarioDetails) throws RessourceNotFoundException{
+		public ResponseEntity<String> launchScenario(@PathVariable(value = "id") long scenarioId) throws RessourceNotFoundException{
 			Scenario scenario = scenarioRepository.findById(scenarioId)
 					.orElseThrow(()-> new RessourceNotFoundException("Scenario not found for this id ::" + scenarioId));
-			//TODO Envoyer le scenario au microservice python pour le stress test
-			
-			scenario.setStatut("IN_PROGRESS");
-			scenarioRepository.save(scenario);
-			
-			return "Scenario en cours de stress test";
-		} 
+
+			var headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			var request =new HttpEntity(scenario, headers);
+
+			ResponseEntity<String> response = restTemplate.postForEntity(pythonServiceEndpoint, request, String.class);
+
+			log.info("Retour appel ms py {}",response);
+
+			if (response.getStatusCode().is2xxSuccessful()){
+
+				scenario.setStatut("IN_PROGRESS");
+				scenarioRepository.save(scenario);
+
+				return ResponseEntity.ok("Scenario en cours de stress test");
+
+			}
+
+			return ResponseEntity.unprocessableEntity().body("Impossible de lancer le scenario pour le moment stress test");
+
+
+		}
 		
 		
 	// delete scenario
