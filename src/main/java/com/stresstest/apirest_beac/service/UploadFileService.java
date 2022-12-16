@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,12 +55,14 @@ public class UploadFileService {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			var request =new HttpEntity(null, headers);
 
-			ResponseEntity<String> response = restTemplate.postForEntity(pythonServiceEndpoint, request, String.class);
+			ResponseEntity<String> response = restTemplate.postForEntity(pythonServiceEndpoint, request, String.class,fileName);
 
 			log.info("response {}",response);
 
 		} catch (IOException e) {
 			log.error("Exception when saving files for bank {}",idBank,e);
+		}catch (RestClientException exception){
+			log.error("Exception when trying to call python ms");
 		}
 	}
 

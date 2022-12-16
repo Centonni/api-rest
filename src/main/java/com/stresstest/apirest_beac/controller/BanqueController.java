@@ -12,7 +12,7 @@ import com.stresstest.apirest_beac.modele.Banque;
 
 @RestController
 @RequestMapping("/banque")
-@CrossOrigin
+@CrossOrigin(origins = {"*","http://localhost:4200"}, allowedHeaders = "*")
 public class BanqueController {
 	
 	@Autowired
