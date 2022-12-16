@@ -1,12 +1,10 @@
 package com.stresstest.apirest_beac.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -53,13 +51,12 @@ public class ScenarioController {
 	//create scenario
 	@PostMapping("/create")
 	public Scenario createScenario( @RequestBody ScenarioDTO dto) {
-		//return scenarioRepository.save(scenario);
 		Scenario scenario = new Scenario();
-		scenario.setAnneeReference(dto.getAnneeReference());
+		scenario.setAnneeReference("2022");
 		scenario.setContenu(dto.getCommentaire());
 		scenario.setDateCreation(new Date());
 		scenario.setLibelle(dto.getLibelle());
-		scenario.setStatut(dto.getStatut());
+		scenario.setStatut("Created");
 		scenario.setType(TypeScenario.valueOf(dto.getTypeScenario().toUpperCase()));
 		
 		return scenarioRepository.save(scenario);
@@ -105,7 +102,7 @@ public class ScenarioController {
 
 			if (response.getStatusCode().is2xxSuccessful()){
 
-				scenario.setStatut("IN_PROGRESS");
+				scenario.setStatut("In Progress");
 				scenarioRepository.save(scenario);
 
 				return ResponseEntity.ok("Scenario en cours de stress test");
