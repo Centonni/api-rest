@@ -1,9 +1,11 @@
 package com.stresstest.apirest_beac.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +44,19 @@ public class ScenarioController {
 
 	// get all scenarios api
 	@GetMapping("/scenarios")
-	public List<Scenario> getAllScenarios(){
-		return scenarioRepository.findAll();
+	public List<ScenarioDTO> getAllScenarios(){
+		List<Scenario> all = scenarioRepository.findAll();
+		List<ScenarioDTO> dto = new ArrayList<>();
+		all.forEach(s -> {
+			try {
+				dto.add( ScenarioDTO.scenarioToDTO(s));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		} );
+
+		return dto;
+		 
 	}
 	@GetMapping("/typeScenarios")
 	public List<TypeScenario> getAllTypesScenarios(){
