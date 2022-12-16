@@ -79,11 +79,11 @@ public class ScenarioController {
 	
 	//get scenario by id
 	@GetMapping("scenario/{id}")
-	public ResponseEntity<Scenario> getScenarioById(@PathVariable(value = "id") long scenarioId) 
-			throws RessourceNotFoundException{
+	public ResponseEntity<ScenarioDTO> getScenarioById(@PathVariable(value = "id") long scenarioId) 
+			throws RessourceNotFoundException, ParseException{
 				Scenario scenario = scenarioRepository.findById(scenarioId)
 						.orElseThrow(()-> new RessourceNotFoundException("Scenario not found for this id ::" + scenarioId));
-				return ResponseEntity.ok().body(scenario);
+				return ResponseEntity.ok().body(ScenarioDTO.scenarioToDTO(scenario));
 	}
 	
 	// update scenario
