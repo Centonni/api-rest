@@ -3,6 +3,8 @@ package com.stresstest.apirest_beac.controller;
 import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +16,8 @@ import com.stresstest.apirest_beac.service.UploadFileService;
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"*","http://localhost:4200"}, allowedHeaders = "*")
 public class UploadFileController {
-    private final UploadFileService uploadFileService;
+	@Autowired
+    private UploadFileService uploadFileService;
 
     @PostMapping("/uploadFile/{idBank}")
     @ResponseStatus(code = HttpStatus.ACCEPTED)

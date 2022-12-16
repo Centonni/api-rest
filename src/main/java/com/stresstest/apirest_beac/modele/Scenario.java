@@ -4,6 +4,7 @@ package com.stresstest.apirest_beac.modele;
 import java.io.Serializable;
 import java.time.Year;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -41,6 +43,8 @@ public class Scenario implements Serializable {
 	@Enumerated
 	TypeScenario type;
 	
+	
+	
 	public Scenario() {
 		super(); 
 		this.type = TypeScenario.BASE; 
@@ -48,7 +52,7 @@ public class Scenario implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Scenario(long id, Date dateCreation, String libelle, String statut, Year anneeReference, String contenu) {
+	public Scenario(long id, Date dateCreation, String libelle, String statut, String anneeReference, String contenu) {
 		this.id = id;
 		if(dateCreation == null)
 			this.dateCreation = new Date();

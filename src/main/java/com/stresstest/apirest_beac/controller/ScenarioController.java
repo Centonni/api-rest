@@ -2,6 +2,7 @@ package com.stresstest.apirest_beac.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,17 @@ public class ScenarioController {
 	}
 	//create scenario
 	@PostMapping("/create")
-	public Scenario createScenario( @RequestBody ScenarioDTO scenario) {
+	public Scenario createScenario( @RequestBody ScenarioDTO dto) {
 		//return scenarioRepository.save(scenario);
-		return new Scenario();
+		Scenario scenario = new Scenario();
+		scenario.setAnneeReference(dto.getAnneeReference());
+		scenario.setContenu(dto.getCommentaire());
+		scenario.setDateCreation(new Date());
+		scenario.setLibelle(dto.getLibelle());
+		scenario.setStatut(dto.getStatut());
+		scenario.setType(TypeScenario.valueOf(dto.getTypeScenario().toUpperCase()));
+		
+		return scenarioRepository.save(scenario);
 	}
 	
 	//get scenario by id
